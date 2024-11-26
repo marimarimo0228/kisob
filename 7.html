@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Canvasを使ったお絵かき(2)</title>
+  </head>
+  <body>
+    <h2>練習問題1、2</h2>
+
+    <canvas id="canvas" width="400" height="300"></canvas>
+    <input type="button" value="三角形！" onclick='drawTriangle();'>
+
+    <h2>練習問題3</h2>
+    <canvas id="canvas2" width="400" height="300"></canvas>
+    <input type="button" value="アーク！" onclick='drawArc();'>
+
+    <h2>練習問題4</h2>
+    <canvas id="canvas3" width="400" height="300"></canvas>
+    <input type="button" value='直線！' onclick='drawLine();'>
+    <script>
+    //ex01,2
+    function drawTriangle(){
+      //canvasを使うための準備
+      let canvas = document.getElementById('canvas');
+      let ctx = canvas.getContext('2d');
+
+      //プロパティの設定
+      ctx.fillStyle = 'rgb(0, 0, 0)'; //デフォルトでは黒
+      //ctx.fillStyle = 'black'; でも同様
+      //ctx.globalAlpha = 0.5;        //透明度
+
+      //実際に描画する部分
+      ctx.beginPath();      //パスを開始
+      ctx.moveTo(50, 50);   //書き始めの起点に移動
+      ctx.lineTo(300, 100); //一辺め
+      ctx.lineTo(190, 200); //二辺め
+      ctx.closePath();      //始点まで戻ってパスを閉じる
+      ctx.fill();           //これを書かないと塗りつぶされない
+    }
+
+    //ex03
+    function drawArc(){
+      let canvas2 = document.getElementById('canvas2');
+      let ctx2 = canvas2.getContext('2d');
+
+      //プロパティ
+      ctx2.fillStyle = 'rgb(0, 0, 0)';
+      ctx2.beginPath();
+      ctx2.arc(200, 150, 100, 0, Math.PI * 2, false);
+      ctx2.stroke();
+
+      /*
+      arc()は、x, y, r, startAngle, endAngle, anticlockwiseの5つのパラメータをとります。x, yは円弧の中心座標、rは半径です。
+      startAngleとendAngleは、それぞれ円弧の始まりと終点をラジアン（0~360度を0~2*円周率で表したもの）で指定します。JavaScriptでは、円周率をMath.PIで表します。
+      anticlockwiseはtrueであれば円弧を反時計回りに、falseであれば時計回りに描画します。
+      下にいくつかの円弧の例を示します。実際の課題では円弧は一つ描画されればOKです。
+      */
+
+      //samples
+      ctx2.beginPath();
+      ctx2.arc(200, 150, 80, 0, Math.PI * 1.5, false);
+      ctx2.stroke();
+
+      ctx2.beginPath();
+      ctx2.arc(200, 150, 60, Math.PI * 0.25, Math.PI * 1.0, true);
+      ctx2.fill();
+    }
+
+    function drawLine(){
+      let canvas3 = document.getElementById('canvas3');
+      let ctx3 = canvas3.getContext('2d');
+
+      ctx3.globalAlpha = 0.3;   //透明度
+
+      //ここからランダムな直線を一つ描画する処理　ここを1000回繰り返す
+      ctx3.beginPath();
+      //直線の色要素r,g,bをランダムに決める
+      let r = Math.floor(Math.random() * 256);
+      let g = Math.floor(Math.random() * 256);
+      let b = Math.floor(Math.random() * 256);
+      ctx3.strokeStyle = 'rgb(' + r + ',' + g + ',' + b + ')'; //直線の色をランダムに設定
+
+      //ランダムな座標（始点）に移動
+      ctx3.moveTo(Math.random() * 400, Math.random() * 300);//canvasが400x300なので
+      //ランダムな座標まで線をひく
+      ctx3.lineTo(Math.random() * 400, Math.random() * 300);
+      //これ書かないと線が描画されない
+      ctx3.stroke();
+    }
+
+    </script>
+  </body>
+<html>
