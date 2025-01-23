@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最終課題</title>
+</head>
+<body>
+    <center>
+        <div style="position: relative; display: inline-block;">
+            <canvas id="canvas" width="1920" height="1080" style="background-color: #35907f;"></canvas>
+            <button id="fullscreen" style="position: absolute; top: 10px; left: 10px;">全画面</button>
+        </div>
+    </center>
+</body>
+
+<script>
+
+
+
+window.addEventListener('load', function(){
+    // フルスクリーン表示
+    document.getElementById('fullscreen').addEventListener('click', function(){
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+        document.body.requestFullscreen();        
+    });
+
+});
+
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
+
+// 背景
+
+
+function alldraw (){
+let linearGradient = ctx.createLinearGradient(canvas.width / 2, 0, canvas.width / 2, canvas.height);
+linearGradient.addColorStop(0, '#000033');
+linearGradient.addColorStop(1.0, '#000077');
+ctx.fillStyle = linearGradient;
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+        // ライン（奥行き感のあるガイドライン）
+        ctx.lineWidth = 2;
+        let centerX = canvas.width / 2;
+        let bottomY = canvas.height;
+        let topY = 0;
+        for (let i = -3; i <= 3; i++) {
+            if(i == -3 || i == 3){
+                ctx.strokeStyle = '#DDDDDD';
+            }else{
+                ctx.strokeStyle = "#666666"
+            }
+            ctx.beginPath();
+            ctx.moveTo(centerX + i * 350, bottomY);
+            ctx.lineTo(centerX + i * 10, topY);
+            ctx.stroke();
+        }
+
+        // ノーツエリア
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = 'black';
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "#CC66FF";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(270, 700);
+        ctx.lineTo(1650, 700);
+        ctx.lineTo(1745, 800);
+        ctx.lineTo(175,800);
+        ctx.closePath();      //始点まで戻ってパスを閉じる
+        ctx.stroke();
+        ctx.fill();
+
+        centerX = canvas.width / 2;
+        bottomY = 800;
+        topY = 700;
+        let notet = 0;
+        let noteb = 0;
+        ctx.strokeStyle = '#CC66FF';
+        ctx.lineWidth = 2;
+        for (let i = -6; i <= 5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(385 + notet, topY);
+            ctx.lineTo(305.83 + noteb, bottomY);
+            ctx.stroke();
+            notet += 115;
+            noteb += 130.83;
+        }
+ 
+        
+        // LIFEバー
+        ctx.fillStyle = '#22FF88';
+        ctx.fillRect(1600, 20, 300, 20);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.strokeRect(1600, 20, 300, 20);
+
+        // スコア表示エリア
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '30px Arial';
+        ctx.fillText('SCORE', 20, 50);
+        ctx.fillText('00000000', 20, 100);
+
+        // LIFEラベル
+        ctx.fillText('LIFE', 1520, 40);
+    }
+
+
+
+
+    let y = [100]; // ノーツの高さ（時間）
+    let notew = [0]; // ノーツの幅（canvas特性で正負反転）
+    let noteup = [0.3];
+    let noteryou = 0;
+
+    //ノーツ1
+    //1
+    let lhx1 = [(y[noteryou] + 984.705) / 1.058];
+    let lhy1 = [(1.058 * lhx1[noteryou] - 984.705) * -1]; // 左上Y座標
+    let llx1 = [((y[noteryou] + notew[noteryou]) + 984.705) / 1.058];
+    let lly1 = [(1.058 * llx1[noteryou] - 984.705) * -1]; // 左下Y座標
+    //2
+    let rhx1 = [(1492.941 + y[noteryou]) / 1.588];
+    let rhy1 = [(1.588 * rhx1[noteryou] - 1492.941) * -1]; // 右上Y座標
+    let rlx1 = [(1492.941 + (y[noteryou] + notew[noteryou])) / 1.588];
+    let rly1 = [(1.588 * rlx1[noteryou] - 1492.941) * -1]; // 右下Y座標
+// ノーツを描画する関数
+function note() {
+    
+    
+    alert(y[noteryou]);
+    splice.y = (0,1,y[noteryou]-noteup[noteryou]); // ノーツ速さ正負反転
+    splice.lhx1 = (0,1,(y[noteryou] + 984.705) / 1.058);
+    splice.lhy1 = (0,1,(1.058 * lhx1 - 984.705) * -1); // 左上Y座標
+    splice.llx1 = (0,1,((y[noteryou] + notew[noteryou]) + 984.705) / 1.058);
+    splice.lly1 = (0,1,(1.058 * llx1[noteryou] - 984.705) * -1); // 左下Y座標
+    //2
+    splice.rhx1 = (0,1,(1492.941 + y[noteryou]) / 1.588);
+    splice.rhy1 = (0,1,(1.588 * rhx1[noteryou] - 1492.941) * -1); // 右上Y座標
+    splice.rlx1 = (0,1,(1492.941 + (y[noteryou] + notew[noteryou])) / 1.588);
+    splice.rly1 = (0,1,(1.588 * rlx1[noteryou] - 1492.941) * -1); // 右下Y座標
+    //ノーツ表示1
+    ctx.fillStyle = '#BAD3FF';
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#9057FF'; // 枠線の色を設定
+    alert(lhx1[noteryou]);
+    ctx.beginPath();
+    ctx.moveTo(lhx1[noteryou], lhy1[noteryou]); // 左上
+    ctx.lineTo(llx1[noteryou], lly1[noteryou]); // 左下
+    ctx.lineTo(rlx1[noteryou], rly1[noteryou]); // 右下
+    ctx.lineTo(rhx1[noteryou], rhy1[noteryou]); // 右上
+    ctx.closePath(); // 始点まで戻ってパスを閉じる
+    ctx.fill();
+    ctx.stroke();
+
+}
+
+//ノーツが一番下に来たときの処理
+function hantei() {
+     // ノーツが画面の下に達したらリセット
+     if (y[noteryou] < (canvas.height - 10) * -1) {
+        splice.y = (0,1,0); // 上に戻す
+        splice.notew = (0,1,0); // 縦幅を初期値に戻す
+        splice.noteup = (0,1,0.3);
+    }
+}
+
+// ゲームループ関数
+function update() {
+    ctx.clearRect(0, 1, canvas.width, canvas.height); // 画面をクリア
+    alldraw();
+    hantei();
+    note(); // ノーツを描画
+}
+
+// ゲームループの開始
+setInterval(update, 0.1); // 0.1秒ごとに画面を更新
+</script>
+</html>
